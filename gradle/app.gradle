@@ -1,0 +1,96 @@
+apply plugin: 'com.android.application'
+
+
+def keystoreFile = file("../keystores/test.properties")
+
+def keystoreProp = loadProperties(keystoreFile)
+
+dependencies {
+}
+
+android {
+    compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
+    buildToolsVersion project.BUILD_TOOLS_VERSION
+
+    useLibrary 'org.apache.http.legacy'
+    defaultConfig {
+        applicationId "com.f1l.zygote"
+        multiDexEnabled true
+        minSdkVersion project.MIN_SDK_VERSION
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(keystoreProp.keystore_file)
+            storePassword keystoreProp.keystore_password
+            keyAlias keystoreProp.keystore_alias
+            keyPassword keystoreProp.key_password
+        }
+    }
+
+    buildTypes {
+
+
+            release {
+                minifyEnabled true
+                shrinkResources false
+                zipAlignEnabled true
+                debuggable false
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            }
+
+            debug {
+                zipAlignEnabled true
+                shrinkResources false
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+                signingConfig signingConfigs.release
+            }
+
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+
+    aaptOptions {
+        cruncherEnabled true
+        useNewCruncher true
+    }
+
+    dexOptions {
+        //incremental true Warning:The `android.dexOptions.incremental` property is deprecated and it has no effect on the build process.
+        preDexLibraries = false
+        jumboMode = true
+        javaMaxHeapSize "16g"
+    }
+
+
+    /*flavorDimensions "network"
+
+    productFlavors {
+
+        //公网
+        publish {
+            dimension "network"
+        }
+        //内网
+        internal {
+            dimension "network"
+        }
+
+    }*/
+
+}
+
+def Properties loadProperties(File file) {
+    Properties p = new Properties()
+    file.withInputStream { stream ->
+        p.load(stream)
+    }
+    return p
+}
+

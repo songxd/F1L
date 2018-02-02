@@ -1,0 +1,31 @@
+apply plugin: 'com.android.library'
+
+
+android {
+    compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
+    buildToolsVersion project.BUILD_TOOLS_VERSION
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+        }
+
+        debug {
+            minifyEnabled false
+            shrinkResources false
+        }
+
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+
+}
+
+

@@ -1,0 +1,16 @@
+apply from: '../gradle/app.gradle'
+
+android {
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':common')
+    implementation project(':testmodule1')
+    annotationProcessor project(':annotationprocesser')
+
+
+}
